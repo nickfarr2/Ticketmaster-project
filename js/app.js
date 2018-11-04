@@ -1,73 +1,58 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-$(document).ready(function(){
+const baseURL = "https://app.ticketmaster.com/discovery/v2/events.json";
+const API_KEY = "kYJ5ZzCU2vrEybvUuEA0Av4cIhpHALCK";
 
-  var API_KEY = "kYJ5ZzCU2vrEybvUuEA0Av4cIhpHALCK";
-  var baseURL = "https://app.ticketmaster.com/discovery/v2/events.json";
+var eventData = [];
 
-  var request = $.ajax({
+var getAPI = function(inputData) {
+
+  $.ajax({
     type: "GET",
     url: baseURL,
     data: {
-      size: 100,
       apikey: API_KEY,
-      postalCode: 90210
+      city: inputData
     },
     dataType: "json",
-    success: function(json) {
-                console.log(json);
-                debugger;
-                // Parse the response.
-                // Do other things.
-             },
+    success: function (json) {
+        eventData = json._embedded.events;
+        console.log(eventData);
+        $('.events').html('');
+        eventData.forEach(function(data) {
+
+          $(".events").append(
+            `
+              <article class='results-table'>
+                <span> <a href=${data.url}><img src="${data.images[8].url}"/></a></span>
+                <span>${data.name}</span>
+                <span>${data.dates.start.localDate}</span>
+              </article>
+            `);
+
+        })
+     },
     error: function(xhr, status, err) {
-                // This time, we do not end up here!
-             }
-      });
-
-  // Array to store all feed sources
-  var SOURCES = [
-      // Add the other two sources
-  ];
-
-  // Prefix url for proxy
-  var PROXY_URL = "https://accesscontrolalloworiginall.herokuapp.com/";
-
-  // Utils object to store any misc. methods
-  var Utils = {
-
-  };
-
-  // App object to store all app relates metods
-  var App = {
-    init: function() {
-      // Methods that need to be called on initialization
-      App.bindEvents();
-    },
-    bindEvents: function() {
-      // Attach event listeners
-    },
-    setView: function(viewType) {
-      var $popup = $('#popUp');
-      var $closePopUp = $('.closePopUp');
-
-      if (viewType === 'loader') {
-        $popup.removeClass('hidden');
-        $closePopUp.addClass('hidden');
-        $popup.addClass('loader');
-      }
-      else if (viewType === 'detail') {
-        $popup.removeClass('hidden');
-        $closePopUp.removeClass('hidden');
-        $popup.removeClass('loader');
-      }
-      else if (viewType === 'feed') {
-        $popup.addClass('hidden');
-        $closePopUp.addClass('hidden');
-      }
+        // This time, we do not end up here!
+        console.log(err)
     }
-  };
+  });
+}
 
-  App.init();
+let events = ['click', 'keypress'];
+
+$(document).ready(function(){
+
+  events.forEach(function(event) {
+    $(".search-button").on(event, function(e){
+      e.preventDefault();
+      if (event === 'click' || (event === 'keypress' && event.which === 13)) {
+        var userInput = $(".city-input").val();
+
+        getAPI(userInput);
+      }
+    })
+  })
+
 });

@@ -15,43 +15,22 @@
     <!--[if lt IE 8]>
     <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    <header>
-        <section class="container clearfix">
-            <a href="#"><h1 class="logo">Feedr</h1></a>
-            <nav>
-                <ul>
-                    <li>
-                        <a href="#">
-                            News Source:
-                            <span class="source-name"></span>
-                        </a>
-                        <ul class="sources-dropdown">
-                            <!-- Sources go here. -->
-                        </ul>
-                    </li>
-                </ul>
-                <section id="search">
-                    <input type="text" name="name" value="">
-                    <a href="#"><img src="images/search.png" alt=""></a>
-                </section>
-            </nav>
-        </section>
+    <header class="header">
+      <a href="#"><h1 class="logo">Balls</h1></a>
+
     </header>
-    <div id="popUp" class="loader hidden">
-        <a href="#" class="closePopUp hidden">x</a>
-        <div class="container">
-            <h1>
-                <!-- Heading for clicked article. -->
-            </h1>
-            <p>
-                <!-- Blurb for clicked article. -->
-            </p>
-            <!-- Don't forget to set the href attribute of the anchor tag. -->
-            <a href="#" class="popUpAction" target="_blank">Read More</a>
-        </div>
-    </div>
-    <section id="main" class="container">
-        <!-- Articles go here.  -->
+
+    <section class="main">
+      <form class="search">
+        <label>Find Show</label>
+        <input class="city-input" placeholder="City"/>
+        <button class="search-button">Find Show</button>
+
+      </form>
+
+    </section>
+    <section class="events">
+
     </section>
     <script src="js/app.bundle.js"></script>
 </body>

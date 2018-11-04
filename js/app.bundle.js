@@ -80,71 +80,51 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-(0, _jquery2.default)(document).ready(function () {
+var baseURL = "https://app.ticketmaster.com/discovery/v2/events.json";
+var API_KEY = "kYJ5ZzCU2vrEybvUuEA0Av4cIhpHALCK";
 
-  var API_KEY = "kYJ5ZzCU2vrEybvUuEA0Av4cIhpHALCK";
-  var baseURL = "https://app.ticketmaster.com/discovery/v2/events.json";
+var eventData = [];
 
-  var request = _jquery2.default.ajax({
+var getAPI = function getAPI(inputData) {
+
+  _jquery2.default.ajax({
     type: "GET",
     url: baseURL,
     data: {
-      size: 100,
       apikey: API_KEY,
-      postalCode: 90210
+      city: inputData
     },
     dataType: "json",
     success: function success(json) {
-      console.log(json);
-      debugger;
-      // Parse the response.
-      // Do other things.
+      eventData = json._embedded.events;
+      console.log(eventData);
+      (0, _jquery2.default)('.events').html('');
+      eventData.forEach(function (data) {
+
+        (0, _jquery2.default)(".events").append('\n              <article class=\'results-table\'>\n                <span> <a href=' + data.url + '><img src="' + data.images[8].url + '"/></a></span>\n                <span>' + data.name + '</span>\n                <span>' + data.dates.start.localDate + '</span>\n              </article>\n            ');
+      });
     },
     error: function error(xhr, status, err) {
       // This time, we do not end up here!
+      console.log(err);
     }
   });
+};
 
-  // Array to store all feed sources
-  var SOURCES = [
-    // Add the other two sources
-  ];
+var events = ['click', 'keypress'];
 
-  // Prefix url for proxy
-  var PROXY_URL = "https://accesscontrolalloworiginall.herokuapp.com/";
+(0, _jquery2.default)(document).ready(function () {
 
-  // Utils object to store any misc. methods
-  var Utils = {};
+  events.forEach(function (event) {
+    (0, _jquery2.default)(".search-button").on(event, function (e) {
+      e.preventDefault();
+      if (event === 'click' || event === 'keypress' && event.which === 13) {
+        var userInput = (0, _jquery2.default)(".city-input").val();
 
-  // App object to store all app relates metods
-  var App = {
-    init: function init() {
-      // Methods that need to be called on initialization
-      App.bindEvents();
-    },
-    bindEvents: function bindEvents() {
-      // Attach event listeners
-    },
-    setView: function setView(viewType) {
-      var $popup = (0, _jquery2.default)('#popUp');
-      var $closePopUp = (0, _jquery2.default)('.closePopUp');
-
-      if (viewType === 'loader') {
-        $popup.removeClass('hidden');
-        $closePopUp.addClass('hidden');
-        $popup.addClass('loader');
-      } else if (viewType === 'detail') {
-        $popup.removeClass('hidden');
-        $closePopUp.removeClass('hidden');
-        $popup.removeClass('loader');
-      } else if (viewType === 'feed') {
-        $popup.addClass('hidden');
-        $closePopUp.addClass('hidden');
+        getAPI(userInput);
       }
-    }
-  };
-
-  App.init();
+    });
+  });
 });
 
 /***/ }),
