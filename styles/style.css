@@ -1,8 +1,14 @@
 /* General Styles */
 body {
     font-family: 'Source Sans Pro', sans-serif;
-}
 
+}
+body.gif {
+  background: url("https://media.giphy.com/media/3oKIPdG9cPQzKHRAL6/giphy.gif");
+  background-repeat: no-repeat;
+  background-size: cover;
+
+}
 a {
   text-decoration: none;
 }
@@ -24,17 +30,47 @@ h1 {
 }
 
 .search {
-  width: 325px;
-margin: 25px auto 0 auto;a
+  margin: 25px auto 0 auto;
+  width: 370px;
+}
+.search-button {
+  background: #4272d7;
+  white-space: nowrap;
+  border-radius: .5px;
+  font-size: 20px;
+  color: #fff;
+  transition: all .2s ease-out, color .2s ease-out;
+  border: 0;
+  cursor: pointer;
+  padding: 9px;
 }
 
 .results-table {
-  background: yellow;
   width: 100%;
+  padding: 1px;
+  height: 100px;
+}
+
+.results-table .text {
+  display: inline-block;
+  width: 20%;
+  height: 100px;
+  line-height: 100px;
+  vertical-align: top;
+  margin: 0;
 }
 
 img {
   width: 100px;
   padding: 10px;
   margin: 10px;
+}
+
+.city-input {
+  background: #fff;
+  border-radius: .5px;
+  padding: 10px 32px;
+  font-size: 20px;
+  border: 1px solid gray;
+  display: inline-block;
 }

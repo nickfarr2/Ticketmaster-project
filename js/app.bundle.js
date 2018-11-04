@@ -80,29 +80,49 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+window.$ = _jquery2.default;
+
 var baseURL = "https://app.ticketmaster.com/discovery/v2/events.json";
 var API_KEY = "kYJ5ZzCU2vrEybvUuEA0Av4cIhpHALCK";
 
-var eventData = [];
+function renderEvents(json) {
+  (0, _jquery2.default)('.events').html('');
+
+  var eventData = _lodash2.default.get(json, '_embedded.events', []);
+
+  if (eventData.length > 0) {
+
+    eventData.forEach(function (data) {
+      (0, _jquery2.default)(".events").append('\n          <article class=\'results-table\'>\n            <p class="text"> <a href=' + data.url + '><img src="' + data.images[8].url + '"/></a></p>\n            <p class="text">' + data.name + '</p>\n            <p class="text">' + data.dates.start.localDate + '</p>\n          </article>\n        ');
+    });
+  } else {
+    (0, _jquery2.default)(".events").append('<article class=\'results-table\'>\n          <p>Make sure to type in a valid city or zip code</p>\n      </article>');
+  }
+}
+
+function checkData(inputData) {
+  var myData = {
+    apikey: API_KEY,
+    city: '',
+    postalCode: ''
+  };
+
+  if (_jquery2.default.isNumeric(inputData)) {
+    myData.postalCode = inputData;
+  } else {
+    myData.city = inputData;
+  }
+  return myData;
+}
 
 var getAPI = function getAPI(inputData) {
-
   _jquery2.default.ajax({
     type: "GET",
     url: baseURL,
-    data: {
-      apikey: API_KEY,
-      city: inputData
-    },
+    data: checkData(inputData),
     dataType: "json",
     success: function success(json) {
-      eventData = json._embedded.events;
-      console.log(eventData);
-      (0, _jquery2.default)('.events').html('');
-      eventData.forEach(function (data) {
-
-        (0, _jquery2.default)(".events").append('\n              <article class=\'results-table\'>\n                <span> <a href=' + data.url + '><img src="' + data.images[8].url + '"/></a></span>\n                <span>' + data.name + '</span>\n                <span>' + data.dates.start.localDate + '</span>\n              </article>\n            ');
-      });
+      renderEvents(json);
     },
     error: function error(xhr, status, err) {
       // This time, we do not end up here!
@@ -111,19 +131,27 @@ var getAPI = function getAPI(inputData) {
   });
 };
 
-var events = ['click', 'keypress'];
+function searchValue(e) {
+  var userInput = (0, _jquery2.default)(".city-input");
+  var inputValue = userInput.val();
+
+  e.preventDefault();
+
+  getAPI(inputValue);
+  userInput.val("");
+  (0, _jquery2.default)("body").removeClass("gif");
+}
 
 (0, _jquery2.default)(document).ready(function () {
 
-  events.forEach(function (event) {
-    (0, _jquery2.default)(".search-button").on(event, function (e) {
-      e.preventDefault();
-      if (event === 'click' || event === 'keypress' && event.which === 13) {
-        var userInput = (0, _jquery2.default)(".city-input").val();
+  (0, _jquery2.default)(".search-button").on('click', function (e) {
+    searchValue(e);
+  });
 
-        getAPI(userInput);
-      }
-    });
+  (0, _jquery2.default)(".search-button").on('keypress', function (e) {
+    if (e.which === 13) {
+      searchValue(e);
+    }
   });
 });
 
